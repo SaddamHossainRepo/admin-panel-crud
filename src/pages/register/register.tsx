@@ -61,7 +61,7 @@ const Register = () => {
       Swal.fire(result.message);
     } else {
       localStorage.setItem("user-info", JSON.stringify(result));
-      Swal.fire("user created successfully");
+      Swal.fire(`Welcome ${result.user.name}`);
       history("/products");
       console.log(result);
     }

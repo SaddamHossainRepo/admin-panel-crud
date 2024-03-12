@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Add from "../../components/add/Add";
 import { userRows } from "../../data";
 import axios from "axios";
+import { Link } from "react-router-dom";
 // import { useQuery } from "@tanstack/react-query";
 
 const columns: GridColDef[] = [
@@ -87,8 +88,9 @@ useEffect(() => {
   return (
     <div className="orders">
       <div className="info">
-        <h1>Orders</h1>
-        <button onClick={() => setOpen(true)}>Add New Users</button>
+        <h1>Users</h1>
+        <Link style={{ backgroundColor: 'white', color:'black' , paddingLeft: '10px', paddingRight: '10px', borderRadius: '2px'}} to='/users/add' onClick={() => setOpen(true)}>Add New User</Link>
+        {/* <button onClick={() => setOpen(true)}>Add New Users</button> */}
       </div>
       <DataTable slug="orders" columns={columns} rows={orders} />
       {/* TEST THE API */}

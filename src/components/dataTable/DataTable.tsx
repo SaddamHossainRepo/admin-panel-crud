@@ -1,10 +1,7 @@
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss";
 import { Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 // import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
@@ -14,25 +11,71 @@ type Props = {
 };
 
 const DataTable = (props: Props) => {
-
   // TEST THE API
 
-  // const queryClient = useQueryClient();
-  // // const mutation = useMutation({
-  // //   mutationFn: (id: number) => {
-  // //     return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
-  // //       method: "delete",
-  // //     });
-  // //   },
-  // //   onSuccess: ()=>{
-  // //     queryClient.invalidateQueries([`all${props.slug}`]);
-  // //   }
-  // // });
+  const queryClient = useQueryClient();
+  const tokenString = localStorage.getItem("user-info");
+  const token = JSON.parse(tokenString);
+
+  console.log("token", token);
+
+  const mutation = useMutation({
+    mutationFn: (id: number) => {
+      // return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
+      return fetch(`http://localhost:9000/v1/product/${id}`, {
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([`all${props.slug}`]);
+    },
+    onSettled: (data, error, variables, context) => {
+      window.location.reload();
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (id: number) => {
+      // return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
+      return fetch(`http://localhost:9000/v1/product/${id}`, {
+        method: "put",
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([`all${props.slug}`]);
+    },
+    onSettled: (data, error, variables, context) => {
+      window.location.reload();
+    },
+  });
 
   const handleDelete = (id: number) => {
     //delete the item
-    // mutation.mutate(id)
+    try {
+      mutation.mutate(id);
+      alert("Product deleted");
+      console.log("delete clicked", id);
+    } catch (error) {
+      alert("Error while deleting product");
+    }
   };
+
+  // const handleUpdate = (id: number) => {
+  //   //update the item
+  //   try {
+  //     updateMutation.mutate(id);
+  //     // alert("Product updated");
+  //     console.log("update clicked", id);
+  //   } catch (error) {
+  //     alert("Error while deleting product");
+  //   }
+  // };
 
   const actionColumn: GridColDef = {
     field: "action",
@@ -41,9 +84,11 @@ const DataTable = (props: Props) => {
     renderCell: (params) => {
       return (
         <div className="action">
-          <Link to={`/${props.slug}/${params.row.id}`}>
-            <img src="/view.svg" alt="" />
-          </Link>
+          <div className="update" >
+            <Link to={`/products/update/${params.row.id}`}>
+              <img src="/view.svg" alt="" />
+            </Link>
+          </div>
           <div className="delete" onClick={() => handleDelete(params.row.id)}>
             <img src="/delete.svg" alt="" />
           </div>

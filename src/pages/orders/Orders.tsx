@@ -6,6 +6,7 @@ import { GridColDef } from "@mui/x-data-grid";
 // import { products } from "../../data";
 import axios from "axios";
 import { userInfo } from "os";
+import { Link } from "react-router-dom";
 
 export interface Order {
   id: number
@@ -151,7 +152,9 @@ useEffect(() => {
     <div className="orders">
       <div className="info">
         <h1>Orders</h1>
-        <button onClick={() => setOpen(true)}>Add New Orders</button>
+        <Link style={{ backgroundColor: 'white', color:'black' , paddingLeft: '10px', paddingRight: '10px', borderRadius: '2px'}} to='/orders/add' onClick={() => setOpen(true)}>Add New Order</Link>
+
+        {/* <button onClick={() => setOpen(true)}>Add New Orders</button> */}
       </div>
       <DataTable slug="orders" columns={columns} rows={orders} />
       {/* TEST THE API */}

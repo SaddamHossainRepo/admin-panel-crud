@@ -8,6 +8,7 @@ import {
   YAxis,
 } from "recharts";
 import "./single.scss";
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {
   id: number;
@@ -22,6 +23,9 @@ type Props = {
 };
 
 const Single = (props: Props) => {
+
+
+
   return (
     <div className="single">
       <div className="view">

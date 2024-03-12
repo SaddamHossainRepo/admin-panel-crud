@@ -15,7 +15,10 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import AddProduct from "./pages/products/AddProduct";
+import AddProduct from "./pages/products/ProductForm";
+import AddUser from "./pages/users/AddUser";
+import AddOrder from "./pages/orders/AddOrder";
+import UpdateProduct from "./pages/products/UpdateProduct";
 
 
 const queryClient = new QueryClient();
@@ -72,6 +75,18 @@ function App() {
         {
           path: "/products/add",
           element: <AddProduct/>,
+        },
+        {
+          path: "/products/update/:id",
+          element: <UpdateProduct/>,
+        },
+        {
+          path: "/users/add",
+          element: <AddUser/>,
+        },
+        {
+          path: "/orders/add",
+          element: <AddOrder/>,
         },
       ],
     },
