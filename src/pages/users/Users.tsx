@@ -48,7 +48,31 @@ const columns: GridColDef[] = [
     width: 200,
     type: "string",
     renderCell: (params) => new Date(params.row?.createdAt).toDateString()
+  },
+  {
+    field: "action",
+    headerName: "Action",
+    width: 200,
+    renderCell: (params) => {
+      return (
+        <div className="action">
+          <div className="update" >
+            <Link to={`/users/update/${params.row.id}`}>
+              <img src="/view.svg" alt="" />
+            </Link>
+          </div>
+          <div className="delete" 
+          // onClick={() => 
+          //   handleDelete(params.row.id)
+          //   }
+            >
+            <img src="/delete.svg" alt="" />
+          </div>
+        </div>
+      );
+    },
   }
+
 ];
 
 const Users = () => {
@@ -68,7 +92,7 @@ const Users = () => {
 
   const tokenString = localStorage.getItem('user-info');
   const token = JSON.parse(tokenString);
-  console.log('token', token);
+  // console.log('token', token);
 useEffect(() => {
   // getAllProducts({});
   axios.get('http://localhost:9000/v1/users/',{
@@ -80,7 +104,7 @@ useEffect(() => {
     setOrders(res.data.data);
     // setProducts(res.data)
     // setPage(res.data.page)
-    console.log('orders', res.data.data);
+    // console.log('orders', res.data.data);
     // console.log('current page', res.data.page);
   });
 }, []);

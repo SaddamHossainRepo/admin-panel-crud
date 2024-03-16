@@ -17,7 +17,7 @@ const DataTable = (props: Props) => {
   const tokenString = localStorage.getItem("user-info");
   const token = JSON.parse(tokenString);
 
-  console.log("token", token);
+  // console.log("token", token);
 
   const mutation = useMutation({
     mutationFn: (id: number) => {
@@ -102,7 +102,7 @@ const DataTable = (props: Props) => {
       <DataGrid
         className="dataGrid"
         rows={props.rows}
-        columns={[...props.columns, actionColumn]}
+        columns={[...props.columns]}
         initialState={{
           pagination: {
             paginationModel: {

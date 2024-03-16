@@ -8,6 +8,8 @@ import { CategoryQueryParam, SubCategoryQueryParam } from "../types";
 import Select from "react-select";
 import SubcategorySelect from "./SubcategorySelect";
 import { generateQueryString } from "../../utils/url";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 type ProductFormProps = {
   initialValue?: Product;
@@ -79,6 +81,7 @@ export const useSubCategory = ({
 };
 
 export default function ProductForm({ initialValue }: ProductFormProps) {
+  const navigate = useNavigate();
   const [isPending, setIsPending] = useState(false);
 
   console.log("initialValue", initialValue);
@@ -123,7 +126,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
 
   const onSubmit: SubmitHandler<ProductInput> = async (data) => {
     // console.log("data", data);
-    setIsPending(true)
+    setIsPending(true);
     const { name, price, unit, description, categoryId, subCategoryId } = data;
     const categoryid = categoryId.id;
     const subcategoryid = subCategoryId.id;
@@ -135,17 +138,40 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
       categoryId: categoryid,
       subCategoryId: subcategoryid,
     };
+    if (initialValue?.id) {
+      const id = initialValue.id;
+      const updatedData = { ...formData };
+      console.log("in update");
+      const response = await fetch(`http://localhost:9000/v1/products/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(updatedData),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("response", response);
+      if (response.ok) {
+        Swal.fire("updated the item");
+      }
+      const result = await response.json();
+    } else {
+      const response = await fetch("http://localhost:9000/v1/products", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("response", response);
+      if (response.ok) {
+        Swal.fire("added the item");
+      }
+      const result = await response.json();
+    }
+    navigate("/products")
 
-    const response = await fetch("http://localhost:9000/v1/products", {
-      method: "POST",
-      body: JSON.stringify(formData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    const result = await response.json();
     // console.log("categoryId", categoryId.id);
     // console.log("subCategoryId", subCategoryId.id);
 
@@ -155,17 +181,20 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
     // } else {
     //   Swal.fire(`Welcome ${result.user.name}`);
     //   //   history("/products");
-    //   reset();
+    //   // reset();
     //   console.log("user name", result.user.name);
     // }
-    setIsPending(false)
+    setIsPending(false);
   };
 
   // console.log(errors);
   // console.log("subCategory", subCategory);
   return (
     <div>
-      <h2 style={{ marginBottom: "20px" }}>AddProduct</h2>
+      {/* <h2 style={{ marginBottom: "20px" }}>AddProduct</h2> */}
+      <div style={{ marginBottom: "20px" }}>
+        {initialValue?.id ? <h2>Update Product</h2> : <h2>Add Product</h2>}
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
@@ -223,6 +252,13 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
                     setCat(cat);
                     onChange(val);
                   }}
+                  styles={{
+                    option: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: state.isSelected ? "#0066ff" : "#fff", // Change background color of selected option
+                      color: state.isSelected ? "#fff" : "#000", // Change text color of selected option
+                    }),
+                  }}
                 />
               );
             }}
@@ -246,6 +282,13 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
                   onChange={(val) => {
                     onChange(val);
                   }}
+                  styles={{
+                    option: (provided, state) => ({
+                      ...provided,
+                      backgroundColor: state.isSelected ? "#0066ff" : "#fff", // Change background color of selected option
+                      color: state.isSelected ? "#fff" : "#000", // Change text color of selected option
+                    }),
+                  }}
                 />
               );
             }}
@@ -255,7 +298,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
 
         <br />
 
-        <button type="submit" disabled={isPending} >
+        <button type="submit" disabled={isPending}>
           {initialValue?.id ? "Update Product" : "Add Product"}
         </button>
       </form>

@@ -66,12 +66,29 @@ const columns: GridColDef[] = [
     type: "string",
     renderCell: (params) => new Date(params.row?.createdAt).toDateString(),
   },
-  // {
-  //   field: "inStock",
-  //   headerName: "In Stock",
-  //   width: 150,
-  //   type: "boolean",
-  // },
+  {
+    field: "action",
+    headerName: "Action",
+    width: 200,
+    renderCell: (params) => {
+      return (
+        <div className="action">
+          <div className="update" >
+            <Link to={`/products/update/${params.row.id}`}>
+              <img src="/view.svg" alt="" />
+            </Link>
+          </div>
+          <div className="delete" 
+          // onClick={() => 
+          //   handleDelete(params.row.id)
+          //   }
+            >
+            <img src="/delete.svg" alt="" />
+          </div>
+        </div>
+      );
+    },
+  }
 ];
 
 const useProducts = ({
