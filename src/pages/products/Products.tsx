@@ -8,88 +8,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { ProductsQueryParam } from "../types";
 import { Product } from "./type";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateQueryString } from "../../utils/url";
 
-const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
-  // {
-  //   field: "image",
-  //   headerName: "Image",
-  //   width: 100,
-  //   renderCell: (params) => {
-  //     return <img src={params.row.img || "/noavatar.png"} alt="" />;
-  //   },
-  // },
-  {
-    field: "name",
-    type: "string",
-    headerName: "Name",
-    width: 250,
-  },
 
-  {
-    field: "price",
-    type: "string",
-    headerName: "Price",
-    width: 200,
-  },
-  {
-    field: "categoryId",
-    type: "string",
-    headerName: "CategoryId",
-    width: 150,
-  },
-  {
-    field: "subCategoryId",
-    headerName: "SubCategoryId",
-    type: "string",
-    width: 200,
-  },
-  {
-    field: "description",
-    headerName: "Description",
-    type: "string",
-    width: 200,
-  },
-  {
-    field: "unit",
-    headerName: "unit",
-    type: "string",
-    width: 50,
-  },
-
-  {
-    field: "createdAt",
-    headerName: "Created At",
-    width: 200,
-    type: "string",
-    renderCell: (params) => new Date(params.row?.createdAt).toDateString(),
-  },
-  {
-    field: "action",
-    headerName: "Action",
-    width: 200,
-    renderCell: (params) => {
-      return (
-        <div className="action">
-          <div className="update" >
-            <Link to={`/products/update/${params.row.id}`}>
-              <img src="/view.svg" alt="" />
-            </Link>
-          </div>
-          <div className="delete" 
-          // onClick={() => 
-          //   handleDelete(params.row.id)
-          //   }
-            >
-            <img src="/delete.svg" alt="" />
-          </div>
-        </div>
-      );
-    },
-  }
-];
 
 const useProducts = ({
   page = 0,
@@ -119,7 +41,114 @@ const useProducts = ({
 
 const Products = () => {
   const [open, setOpen] = useState(false);
-
+  const queryClient = useQueryClient();
+  const tokenString = localStorage.getItem("user-info");
+  const token = JSON.parse(tokenString ?? '');
+  
+  const mutation = useMutation({
+    mutationFn: (id: number) => {
+      // return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
+      return fetch(`http://localhost:9000/v1/products/${id}`, {
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([`all${props.slug}`]);
+    },
+    onSettled: (data, error, variables, context) => {
+      window.location.reload();
+    },
+  });
+  
+  const handleDelete = (id: number) => {
+    //delete the item
+    try {
+      mutation.mutate(id);
+      alert("Product deleted");
+      console.log("delete clicked", id);
+    } catch (error) {
+      alert("Error while deleting product");
+    }
+  };
+  
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 90 },
+    // {
+    //   field: "image",
+    //   headerName: "Image",
+    //   width: 100,
+    //   renderCell: (params) => {
+    //     return <img src={params.row.img || "/noavatar.png"} alt="" />;
+    //   },
+    // },
+    {
+      field: "name",
+      type: "string",
+      headerName: "Name",
+      width: 250,
+    },
+  
+    {
+      field: "price",
+      type: "string",
+      headerName: "Price",
+      width: 200,
+    },
+    {
+      field: "categoryId",
+      type: "string",
+      headerName: "CategoryId",
+      width: 150,
+    },
+    {
+      field: "subCategoryId",
+      headerName: "SubCategoryId",
+      type: "string",
+      width: 200,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      type: "string",
+      width: 200,
+    },
+    {
+      field: "unit",
+      headerName: "unit",
+      type: "string",
+      width: 50,
+    },
+  
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      width: 200,
+      type: "string",
+      renderCell: (params) => new Date(params.row?.createdAt).toDateString(),
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <div className="action">
+            <div className="update">
+              <Link to={`/products/update/${params.row.id}`}>
+                <img src="/view.svg" alt="" />
+              </Link>
+            </div>
+            <div className="delete" onClick={() => handleDelete(params.row.id)}>
+              <img src="/delete.svg" alt="" />
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
   // TEST THE API
 
   // const { isLoading, data } = useQuery({

@@ -20,6 +20,7 @@ import AddUser from "./pages/users/UserForm";
 import AddOrder from "./pages/orders/AddOrder";
 import UpdateProduct from "./pages/products/UpdateProduct";
 import UpdateUser from "./pages/users/UpdateUser";
+import Attachments from "./pages/attachments/attachments";
 
 
 const queryClient = new QueryClient();
@@ -92,6 +93,10 @@ function App() {
         {
           path: "/orders/add",
           element: <AddOrder/>,
+        },
+        {
+          path: "/attachments",
+          element: <Attachments/>,
         },
       ],
     },

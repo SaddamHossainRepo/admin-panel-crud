@@ -14,7 +14,7 @@ type Props = {
   id: number;
   img?: string;
   title: string;
-  info: object;
+  info?: object;
   chart?: {
     dataKeys: { name: string; color: string }[];
     data: object[];

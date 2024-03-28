@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+// import React, { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { User } from "./type";
-import { zodResolver } from "@hookform/resolvers/zod";
+// import { zodResolver } from "@hookform/resolvers/zod";
 import Swal from "sweetalert2";
-import { UserFormSchema, UserInput } from "./userFormSchema";
+import { UserInput } from "./userFormSchema";
 import { useNavigate } from "react-router-dom";
 
 type UserFormProps = {

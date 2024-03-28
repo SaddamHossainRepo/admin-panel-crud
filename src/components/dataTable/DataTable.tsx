@@ -15,7 +15,7 @@ const DataTable = (props: Props) => {
 
   const queryClient = useQueryClient();
   const tokenString = localStorage.getItem("user-info");
-  const token = JSON.parse(tokenString);
+  const token = JSON.parse(tokenString ?? '');
 
   // console.log("token", token);
 
@@ -41,7 +41,7 @@ const DataTable = (props: Props) => {
     mutationFn: (id: number) => {
       // return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
       return fetch(`http://localhost:9000/v1/product/${id}`, {
-        method: "put",
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token.token}`,
         },

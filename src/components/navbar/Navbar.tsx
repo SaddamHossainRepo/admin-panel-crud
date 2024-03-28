@@ -1,11 +1,14 @@
+import { Link } from "react-router-dom";
 import "./navbar.scss";
 
 const Navbar = () => {
   return (
     <div className="navbar">
       <div className="logo">
-        <img src="logo.svg" alt="" />
-        <span>Blackaboij</span>
+        {/* <img src="logo.svg" alt="" /> */}
+        <Link to="/">
+          <span>Blackaboij</span>
+        </Link>
       </div>
       <div className="icons">
         <img src="/search.svg" alt="" className="icon" />

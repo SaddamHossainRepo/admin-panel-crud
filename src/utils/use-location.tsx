@@ -14,7 +14,7 @@ interface Component {
   types: string[];
 }
 
-export const fullAddressAtom = atom((get) => {
+export const fullAddressAtom = atom((get: any) => {
   const location = get(locationAtom);
   return location
     ? `${location.street_address}, ${location.city}, ${location.state}, ${location.zip}, ${location.country}`
