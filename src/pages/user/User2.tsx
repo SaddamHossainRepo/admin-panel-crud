@@ -1,20 +1,12 @@
-import { useContext, useState, useEffect } from "react"
-import "./user.scss"
-import { AuthContext } from "../../providers/AuthProvider"
+import React, { useState, useEffect } from "react";
 
 interface User {
   id: number;
-  name: string;
+  username: string;
   email: string;
 }
 
-const User = () => {
-
-  const userInfoAgain = useContext(AuthContext);
-  console.log('from user', userInfoAgain);
-  //Fetch data and send to Single Component
-
-
+const User: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -46,11 +38,10 @@ const User = () => {
 
     fetchCurrentUser();
   }, []);
-  
+
   return (
-    <div className="user mx-auto max-w-md p-4 bg-gray-100 rounded-lg shadow-md">
-      {/* <Single {...singleUser}/> */}
-      <h2 className="text-2xl font-semibold mb-4 text-red-500">Profile</h2>
+    <div>
+      <h2>Profile</h2>
       {loading ? (
         <p>Loading...</p>
       ) : currentUser ? (
@@ -63,7 +54,7 @@ const User = () => {
         <p>No user logged in</p>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default User
+export default User;

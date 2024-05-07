@@ -33,6 +33,9 @@ const Register = () => {
     console.log("result", result);
     if (!result.token) {
       Swal.fire(result.message);
+    }
+    if (result.permissions[0] !== "ADMIN") {
+      Swal.fire("Please Login as Admin");
     } else {
       localStorage.setItem("user-info", JSON.stringify(result));
       setIsLoggedin(true);
@@ -48,7 +51,7 @@ const Register = () => {
     e.preventDefault();
     // eslint-disable-next-line prefer-const
     let item = { name, email, password };
-    console.log(item);
+    // console.log(item);
     const response = await fetch("http://localhost:9000/v1/auth/register", {
       method: "POST",
       body: JSON.stringify(item),
@@ -57,8 +60,11 @@ const Register = () => {
       },
     });
     const result = await response.json();
+    console.log("from register user", result.user.role);
     if (!result.tokens) {
       Swal.fire(result.message);
+    } if (result.user.role !== "ADMIN") {
+      Swal.fire("Please Login as Admin");
     } else {
       localStorage.setItem("user-info", JSON.stringify(result));
       Swal.fire(`Welcome ${result.user.name}`);
@@ -139,12 +145,12 @@ const Register = () => {
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
-            className="register-btn"
+              className="register-btn"
               type="submit"
               fullWidth
               variant="contained"
@@ -153,11 +159,11 @@ const Register = () => {
               Register
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link href="/login" variant="body2">
                   {"Already have an account? Sign In"}

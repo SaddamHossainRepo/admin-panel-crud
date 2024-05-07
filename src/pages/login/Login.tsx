@@ -29,9 +29,12 @@ const Login = () => {
       },
     });
     const result = await response.json();
-    console.log("result", result);
+    // console.log("result", result);
+    // console.log("permission", result.permissions[0]);
     if (!result.token) {
       Swal.fire(result.message);
+    }if(result.permissions[0] !== 'ADMIN'){
+      Swal.fire("Please Login as Admin")
     } else {
       localStorage.setItem("user-info", JSON.stringify(result));
       setIsLoggedin(true);
@@ -85,10 +88,10 @@ const Login = () => {
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               className="login-btn"
               type="submit"
@@ -99,11 +102,11 @@ const Login = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}

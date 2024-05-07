@@ -9,19 +9,16 @@ import Menu from "./components/menu/Menu";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/register";
 import "./styles/global.scss";
-import User from "./pages/user/User";
 import Product from "./pages/product/Product";
-import {
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AddProduct from "./pages/products/ProductForm";
 import AddUser from "./pages/users/UserForm";
 import AddOrder from "./pages/orders/AddOrder";
 import UpdateProduct from "./pages/products/UpdateProduct";
 import UpdateUser from "./pages/users/UpdateUser";
 import Attachments from "./pages/attachments/attachments";
-
+import AuthProvider from "./providers/AuthProvider";
+import User from "./pages/user/User";
 
 const queryClient = new QueryClient();
 
@@ -66,9 +63,13 @@ function App() {
           path: "/orders",
           element: <Orders />,
         },
+        // {
+        //   path: "/users/:id",
+        //   element: <User />,
+        // },
         {
-          path: "/users/:id",
-          element: <User />,
+          path: `/profile`,
+          element: <User/>
         },
         {
           path: "/products/:id",
@@ -76,27 +77,27 @@ function App() {
         },
         {
           path: "/products/add",
-          element: <AddProduct/>,
+          element: <AddProduct />,
         },
         {
           path: "/products/update/:id",
-          element: <UpdateProduct/>,
+          element: <UpdateProduct />,
         },
         {
           path: "/users/add",
-          element: <AddUser/>,
+          element: <AddUser />,
         },
         {
           path: "/users/update/:id",
-          element: <UpdateUser/>,
+          element: <UpdateUser />,
         },
         {
           path: "/orders/add",
-          element: <AddOrder/>,
+          element: <AddOrder />,
         },
         {
           path: "/attachments",
-          element: <Attachments/>,
+          element: <Attachments />,
         },
       ],
     },
@@ -110,7 +111,13 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <div>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </div>
+  );
 }
 
 export default App;
