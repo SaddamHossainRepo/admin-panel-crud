@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Products.scss";
 import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
 import { GridColDef } from "@mui/x-data-grid";
 // import { products } from "../../data";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { ProductsQueryParam } from "../types";
 import { Product } from "./type";
@@ -76,14 +75,14 @@ const Products = () => {
   
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
-    // {
-    //   field: "image",
-    //   headerName: "Image",
-    //   width: 100,
-    //   renderCell: (params) => {
-    //     return <img src={params.row.img || "/noavatar.png"} alt="" />;
-    //   },
-    // },
+    {
+      field: "image",
+      headerName: "Image",
+      width: 100,
+      renderCell: (params) => {
+        return <img src={params.row.image || "/noavatar.png"} alt="" />;
+      },
+    },
     {
       field: "name",
       type: "string",
@@ -97,6 +96,7 @@ const Products = () => {
       headerName: "Price",
       width: 200,
     },
+    
     {
       field: "categoryId",
       type: "string",

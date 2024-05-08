@@ -84,7 +84,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
   const navigate = useNavigate();
   const [isPending, setIsPending] = useState(false);
 
-  console.log("initialValue", initialValue);
+  // console.log("initialValue", initialValue);
   const [cat, setCat] = useState<Category>();
   const { category, isLoading, error } = useCategory();
   const {
@@ -107,6 +107,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
     defaultValues: {
       name: initialValue?.name ?? "",
       price: initialValue?.price ?? "",
+      image: initialValue?.image ?? "",
       unit: initialValue?.unit ?? "pcs",
       description: initialValue?.description ?? "",
       categoryId: category.find((cat) => initialValue?.id === cat.id) ?? {},
@@ -118,21 +119,22 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
     // resolver: zodResolver(ProductFormSchema),
   });
 
-  console.log("defaultValues", defaultValues);
-  console.log("category find", category);
+  // console.log("defaultValues", defaultValues);
+  // console.log("category find", category);
   const tokenString = localStorage.getItem("user-info");
   const token = JSON.parse(tokenString);
   const accessToken = token.token;
 
   const onSubmit: SubmitHandler<ProductInput> = async (data) => {
-    // console.log("data", data);
+    console.log("data", data);
     setIsPending(true);
-    const { name, price, unit, description, categoryId, subCategoryId } = data;
+    const { name, price, image, unit, description, categoryId, subCategoryId } = data;
     const categoryid = categoryId.id;
     const subcategoryid = subCategoryId.id;
     const formData = {
       name,
       price,
+      image,
       unit,
       description,
       categoryId: categoryid,
@@ -141,7 +143,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
     if (initialValue?.id) {
       const id = initialValue.id;
       const updatedData = { ...formData };
-      console.log("in update");
+      // console.log("in update");
       const response = await fetch(`http://localhost:9000/v1/products/${id}`, {
         method: "PATCH",
         body: JSON.stringify(updatedData),
@@ -150,7 +152,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log("response", response);
+      // console.log("response", response);
       if (response.ok) {
         Swal.fire("updated the item");
       }
@@ -164,7 +166,7 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log("response", response);
+      // console.log("response", response);
       if (response.ok) {
         Swal.fire("added the item");
       }
@@ -215,6 +217,13 @@ export default function ProductForm({ initialValue }: ProductFormProps) {
           Price:
           <input type="number" step="0.01" {...register("price")} />
           <span style={{ color: "red" }}>{errors.price?.message}</span>
+        </label>
+        <br />
+
+        <label>
+          Image:
+          <input type="file" step="0.01" {...register("image")} />
+          <span style={{ color: "red" }}>{errors.image?.message}</span>
         </label>
         <br />
 
