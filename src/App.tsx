@@ -19,6 +19,7 @@ import UpdateUser from "./pages/users/UpdateUser";
 import Attachments from "./pages/attachments/attachments";
 import AuthProvider from "./providers/AuthProvider";
 import User from "./pages/user/User";
+import UpdateOrder from "./pages/orders/UpdateOrder";
 
 const queryClient = new QueryClient();
 
@@ -94,6 +95,10 @@ function App() {
         {
           path: "/orders/add",
           element: <AddOrder />,
+        },
+        {
+          path: "/orders/update/:id",
+          element: <UpdateOrder/>,
         },
         {
           path: "/attachments",

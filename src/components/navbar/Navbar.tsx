@@ -3,12 +3,17 @@ import "./navbar.scss";
 import Swal from "sweetalert2";
 
 const Navbar = () => {
+  const user = localStorage.getItem('user-data');
+  console.log('user from navbar', user);
+  const currentlyLoggedInUser = JSON.parse(user);
+  console.log(currentlyLoggedInUser);
   const history = useNavigate();
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
       // const userDataString = localStorage.getItem('user-info');
       const userDataString = localStorage.removeItem("user-info");
+      localStorage.removeItem("user-data");
       if (userDataString) {
         const userData = JSON.parse(userDataString);
         // Use userData here
@@ -83,8 +88,8 @@ const Navbar = () => {
           </Link>
         </button>
         <div className="notification">
-          <img src="/notifications.svg" alt="" />
-          <span>1</span>
+          {/* <img src="/notifications.svg" alt="" /> */}
+          {/* <span>1</span> */}
         </div>
         <Link to='/profile'>
           <div className="user">
@@ -92,7 +97,9 @@ const Navbar = () => {
               src="https://images.pexels.com/photos/11038549/pexels-photo-11038549.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
               alt=""
             />
-            <span>Jane</span>
+          
+            <span>{currentlyLoggedInUser?.name}</span>
+            {/* <span>Jane</span> */}
           </div>
         </Link>
         <img src="/settings.svg" alt="" className="icon" />

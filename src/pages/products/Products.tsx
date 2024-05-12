@@ -10,8 +10,6 @@ import { Product } from "./type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateQueryString } from "../../utils/url";
 
-
-
 const useProducts = ({
   page = 0,
   limit = 1000,
@@ -42,8 +40,22 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const tokenString = localStorage.getItem("user-info");
-  const token = JSON.parse(tokenString ?? '');
-  
+  // const token = JSON.parse(tokenString ?? '');
+
+  let token;
+  if (tokenString) {
+    try {
+      token = JSON.parse(tokenString);
+    } catch (error) {
+      console.error("Error parsing token string:", error);
+      // Handle the error accordingly, e.g., setting token to null or a default value
+      token = null;
+    }
+  } else {
+    console.error("Token string is empty");
+    // Handle the case where tokenString is empty, e.g., setting token to null or a default value
+    token = null;
+  }
   const mutation = useMutation({
     mutationFn: (id: number) => {
       // return fetch(`http://localhost:8800/api/${props.slug}/${id}`, {
@@ -61,7 +73,7 @@ const Products = () => {
       window.location.reload();
     },
   });
-  
+
   const handleDelete = (id: number) => {
     //delete the item
     try {
@@ -72,7 +84,7 @@ const Products = () => {
       alert("Error while deleting product");
     }
   };
-  
+
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -89,14 +101,14 @@ const Products = () => {
       headerName: "Name",
       width: 250,
     },
-  
+
     {
       field: "price",
       type: "string",
       headerName: "Price",
       width: 200,
     },
-    
+
     {
       field: "categoryId",
       type: "string",
@@ -121,7 +133,7 @@ const Products = () => {
       type: "string",
       width: 50,
     },
-  
+
     {
       field: "createdAt",
       headerName: "Created At",

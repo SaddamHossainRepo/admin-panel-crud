@@ -1,13 +1,14 @@
 import React from "react";
-import ProductForm from "./ProductForm";
+// import ProductForm from "./ProductForm";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Product } from "./type";
+import { Order } from "./type";
+import ProductForm from "../products/ProductForm";
 
 const useProduct = (id?: string) => {
-  const url = `${import.meta.env.VITE_BASE_URL}/orders/${id}`;
+  const url = `${import.meta.env.VITE_BASE_URL}/products/${id}`;
   const { isLoading, data, error } = useQuery({
-    queryKey: [`orders-${id}`],
+    queryKey: [`products-${id}`],
     queryFn: () => fetch(url).then((res) => res.json()),
   });
   return {
@@ -18,7 +19,7 @@ const useProduct = (id?: string) => {
   };
 };
 
-export default function UpdateProduct() {
+export default function UpdateOrder() {
   const { id } = useParams();
 
   const { product, isLoading } = useProduct(id);

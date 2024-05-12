@@ -15,8 +15,22 @@ const DataTable = (props: Props) => {
 
   const queryClient = useQueryClient();
   const tokenString = localStorage.getItem("user-info");
-  const token = JSON.parse(tokenString ?? '');
+  // const token = JSON.parse(tokenString ?? '');
 
+  let token;
+  if (tokenString) {
+    try {
+      token = JSON.parse(tokenString);
+    } catch (error) {
+      console.error("Error parsing token string:", error);
+      // Handle the error accordingly, e.g., setting token to null or a default value
+      token = null;
+    }
+  } else {
+    console.error("Token string is empty");
+    // Handle the case where tokenString is empty, e.g., setting token to null or a default value
+    token = null;
+  }
   // console.log("token", token);
 
   const mutation = useMutation({
@@ -84,7 +98,7 @@ const DataTable = (props: Props) => {
     renderCell: (params) => {
       return (
         <div className="action">
-          <div className="update" >
+          <div className="update">
             <Link to={`/products/update/${params.row.id}`}>
               <img src="/view.svg" alt="" />
             </Link>
